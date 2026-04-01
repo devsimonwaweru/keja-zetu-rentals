@@ -1,0 +1,561 @@
+/* src/index.css */
+
+/* =========================================
+   1. BRAND COLORS & VARIABLES (keja-zetu THEME)
+   ========================================= */
+:root {
+  /* Brand Colors */
+  --primary-blue: #0056b3;       /* Logo Blue */
+  --primary-hover: #003d80;      /* Darker Blue for hover */
+  
+  --accent-red: #d32f2f;         /* Logo Red (Roof/Text) */
+  
+  /* Backgrounds (Keeping the sleek dark mode) */
+  --bg-dark: #121212;            /* Main App BG */
+  --bg-light: #1F1F1F;           /* Card Background */
+  --bg-input: #2C2C2C;           /* Input Fields */
+  
+  /* Text Colors */
+  --text-on-dark: #FFFFFF;
+  --text-on-light: #FFFFFF;
+  --text-subtle: #B0B0B0;
+  
+  /* Dimensions */
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --sidebar-width: 260px;
+}
+
+/* =========================================
+   2. GLOBAL RESET
+   ========================================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-on-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  color: var(--primary-blue); /* Headings now use Primary Blue */
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* =========================================
+   3. LAYOUT COMPONENTS
+   ========================================= */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--bg-dark);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+  transition: transform 0.3s ease;
+}
+
+.nav-menu {
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  color: var(--text-subtle);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.nav-item:hover {
+  color: var(--text-on-dark);
+  background-color: rgba(0, 86, 179, 0.1); /* Blue hover tint */
+}
+
+.nav-item.active {
+  background-color: var(--primary-blue);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 86, 179, 0.3);
+}
+
+/* --- MAIN CONTENT --- */
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex-grow: 1;
+  background-color: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  background-color: var(--bg-dark);
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topbar h2 {
+  color: var(--text-on-dark);
+  margin: 0;
+}
+
+.topbar-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  margin-right: 16px;
+}
+
+.content-view {
+  padding: 32px;
+}
+
+/* =========================================
+   4. CARDS & GRID (Dashboard & Properties)
+   ========================================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card, .login-card, .data-table, .chart-container, .actions-container, .modal {
+  background-color: var(--bg-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  color: var(--text-on-light);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Dashboard Specific Square Cards */
+.stat-card {
+  aspect-ratio: 1 / 1;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-blue);
+}
+
+.stat-card.red-accent {
+  border: 4px solid var(--accent-red); /* Changed from gold to red */
+}
+
+.stat-card.danger {
+  border-left: 4px solid #ef4444;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-subtle);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+/* Skeleton Loading State */
+.skeleton {
+  background-color: #2a2a2a;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.6; }
+}
+
+/* =========================================
+   5. FORMS & LOGIN
+   ========================================= */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-dark);
+  padding: 20px;
+}
+
+.login-card {
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.login-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.login-logo {
+  max-width: 180px;
+  max-height: 180px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--bg-input);
+  border: 1px solid #444;
+  border-radius: var(--radius-md);
+  color: #FFFFFF;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-blue); /* Focus ring is now blue */
+  background-color: #333333;
+}
+
+.input-group label {
+  display: block;
+  text-align: left;
+  margin-bottom: 6px;
+  color: var(--text-subtle);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   6. BUTTONS & TABLES
+   ========================================= */
+button, .btn {
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-login, .btn-primary {
+  background-color: var(--primary-blue); /* Primary buttons now blue */
+  color: #fff;
+  width: 100%;
+}
+
+.btn-login:hover, .btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* Table Styles */
+.data-table { padding: 0; overflow: hidden; width: 100%; display: block; }
+.data-table table { width: 100%; border-collapse: collapse; }
+.data-table th { background-color: #2C2C2C; color: var(--text-subtle); padding: 16px; text-align: left; font-weight: 600; font-size: 0.9rem; }
+.data-table td { padding: 16px; border-bottom: 1px solid #333; color: #FFFFFF; }
+.data-table tr:hover { background-color: #2A2A2A; }
+
+/* =========================================
+   7. MODALS & BADGES
+   ========================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal {
+  background: var(--bg-light);
+  width: 90%;
+  max-width: 500px;
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  color: var(--text-on-light);
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.status-paid, .status-occupied, .status-completed {
+  background-color: rgba(0, 86, 179, 0.2); /* Blue tint for positive status */
+  color: #4da6ff;
+}
+
+.status-pending, .status-unpaid, .status-vacant {
+  background-color: rgba(211, 47, 47, 0.2); /* Red tint for negative status */
+  color: #ef4444;
+}
+
+/* =========================================
+   8. MESSAGES PAGE STYLES
+   ========================================= */
+.tabs-container {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #333;
+  padding-bottom: 0;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab-btn.active {
+  color: var(--primary-blue);
+  border-bottom-color: var(--accent-red); /* Active tab has red underline */
+}
+
+.messages-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 24px;
+}
+
+.tenant-list-card {
+  padding: 0;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #333;
+}
+
+.tenant-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.tenant-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tenant-item:hover {
+  background: #252525;
+}
+
+.tenant-item.selected {
+  background: rgba(0, 86, 179, 0.15); /* Light blue selection */
+  border-left: 4px solid var(--primary-blue);
+}
+
+.tenant-info h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-on-dark);
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-red { background: rgba(211, 47, 47, 0.2); color: var(--accent-red); }
+.badge-green { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+.badge-yellow { background: rgba(245, 158, 11, 0.2); color: #d97706; }
+
+.message-textarea {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1rem;
+  color: var(--text-on-dark);
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 1.5rem;
+}
+.message-textarea:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+}
+
+/* =========================================
+   9. RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.active { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .content-view { padding: 16px; }
+  .topbar-logo { height: 24px; }
+  .topbar h2 { display: none; }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  .stat-card {
+    padding: 12px;
+  }
+  
+  .messages-layout {
+    grid-template-columns: 1fr;
+  }
+}
+/* =========================================
+   10. INSTALL PROMPT MODAL
+   ========================================= */
+.install-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.install-modal {
+  background-color: var(--bg-light);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  width: 100%;
+  max-width: 380px;
+  position: relative;
+  text-align: center;
+  border: 1px solid #333;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.install-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-subtle);
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.install-close:hover {
+  color: white;
+}
+
+.install-icon {
+  width: 80px;
+  height: 80px;
+  background: rgba(0, 86, 179, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: var(--primary-blue);
+}
+
+.install-modal h3 {
+  color: white;
+  margin-bottom: 8px;
+}

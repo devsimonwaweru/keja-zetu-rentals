@@ -3,18 +3,41 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 import { Building2, Users, DollarSign } from 'lucide-react'
 
-/* ---------- Small reusable action card ---------- */
+/* ---------- Optimized Action Card ---------- */
 const ActionCard = ({ icon: IconComponent, label, onClick }) => {
   if (!IconComponent) return null
 
   return (
     <div
-      className="stat-card"
-      style={{ cursor: 'pointer', background: '#252525', padding: '20px' }}
       onClick={onClick}
+      style={{
+        background: '#1a1a1a',
+        border: '1px solid #2a2a2a',
+        borderRadius: '12px',
+        padding: '24px 16px',
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '12px',
+        transition: 'transform 0.2s ease, background 0.2s ease',
+        minHeight: '120px', // Ensures good tap area on mobile
+        textAlign: 'center'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = '#252525'
+        e.currentTarget.style.transform = 'translateY(-2px)'
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = '#1a1a1a'
+        e.currentTarget.style.transform = 'translateY(0)'
+      }}
     >
-      <IconComponent size={40} color="var(--primary-green)" style={{ marginBottom: '12px' }} />
-      <div style={{ color: '#fff', fontWeight: '600' }}>{label}</div>
+      <IconComponent size={32} color="var(--primary-green)" />
+      <div style={{ color: '#ccc', fontWeight: '500', fontSize: '14px' }}>
+        {label}
+      </div>
     </div>
   )
 }
@@ -118,61 +141,65 @@ export default function Dashboard() {
   }
 
   return (
-    <div>
-      {/* ---------- Header ---------- */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
-        <h3>Dashboard Overview</h3>
-        <div style={{ color: '#fff', fontWeight: '600' }}>
-          {userName ? `Logged in as ${userName}` : 'Loading user...'}
+    <div style={{ padding: '0 4px' }}> {/* Small padding to prevent edge clipping on mobile */}
+      
+      {/* ---------- Responsive Header ---------- */}
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', // Stack on mobile
+        marginBottom: '24px', 
+        gap: '8px'
+      }}>
+        <h3 style={{ margin: 0 }}>Dashboard</h3>
+        <div style={{ color: '#888', fontSize: '14px' }}>
+          {userName ? `Welcome back, ${userName}` : 'Loading...'}
         </div>
       </div>
 
-      {/* ---------- Stats ---------- */}
+      {/* ---------- Responsive Stats Grid ---------- */}
+      {/* minmax(140px, 1fr) ensures 2 columns on mobile, 4 on desktop */}
       {loading ? (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '24px'
-          }}
-        >
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gap: '16px'
+        }}>
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
               className="stat-card skeleton"
-              style={{ aspectRatio: '1 / 1' }}
+              style={{ height: '120px', background: '#1a1a1a', borderRadius: '12px' }}
             />
           ))}
         </div>
       ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '24px',
-            marginBottom: '32px'
-          }}
-        >
-          <div className="stat-card">
-            <div className="stat-label">Total Properties</div>
-            <div className="stat-value">{stats.properties}</div>
+        <div style={{
+          display: 'grid',
+          // MAGIC HANDLE: Fits 2 items on mobile (<400px), expands to 4 on desktop
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', 
+          gap: '16px',
+          marginBottom: '32px'
+        }}>
+          <div className="stat-card" style={{ padding: '20px', borderRadius: '12px', background: '#1a1a1a' }}>
+            <div className="stat-label" style={{ fontSize: '13px', color: '#888' }}>Properties</div>
+            <div className="stat-value" style={{ fontSize: '28px', marginTop: '8px', fontWeight: '700' }}>{stats.properties}</div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-label">Occupied Units</div>
-            <div className="stat-value">{stats.occupied}</div>
+          <div className="stat-card" style={{ padding: '20px', borderRadius: '12px', background: '#1a1a1a' }}>
+            <div className="stat-label" style={{ fontSize: '13px', color: '#888' }}>Occupied Units</div>
+            <div className="stat-value" style={{ fontSize: '28px', marginTop: '8px', fontWeight: '700' }}>{stats.occupied}</div>
           </div>
 
-          <div className="stat-card gold-accent">
-            <div className="stat-label">Rent Collected</div>
-            <div className="stat-value">
+          <div className="stat-card" style={{ padding: '20px', borderRadius: '12px', background: '#1a1a1a', borderLeft: '4px solid var(--primary-green)' }}>
+            <div className="stat-label" style={{ fontSize: '13px', color: '#888' }}>Collected</div>
+            <div className="stat-value" style={{ fontSize: '22px', marginTop: '8px', fontWeight: '700', color: 'var(--primary-green)' }}>
               KES {stats.collected.toLocaleString()}
             </div>
           </div>
 
-          <div className="stat-card danger">
-            <div className="stat-label">Arrears</div>
-            <div className="stat-value" style={{ color: '#ef4444' }}>
+          <div className="stat-card" style={{ padding: '20px', borderRadius: '12px', background: '#1a1a1a', borderLeft: '4px solid #ef4444' }}>
+            <div className="stat-label" style={{ fontSize: '13px', color: '#888' }}>Arrears</div>
+            <div className="stat-value" style={{ fontSize: '22px', marginTop: '8px', fontWeight: '700', color: '#ef4444' }}>
               KES {stats.arrears.toLocaleString()}
             </div>
           </div>
@@ -180,15 +207,13 @@ export default function Dashboard() {
       )}
 
       {/* ---------- Quick actions ---------- */}
-      <h4 style={{ color: '#fff', marginBottom: '16px' }}>Quick Actions</h4>
+      <h4 style={{ color: '#fff', marginBottom: '16px', fontSize: '16px' }}>Quick Actions</h4>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '20px'
-        }}
-      >
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', // Fits 3 on mobile nicely
+        gap: '16px'
+      }}>
         <ActionCard
           icon={Building2}
           label="Add Property"
